@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/app_info.dart';
 import '../../core/constants.dart';
@@ -8,6 +10,7 @@ import '../../models/baby_profile.dart';
 import '../../providers/baby_provider.dart';
 import '../../providers/settings_provider.dart';
 import '../../services/settings_store.dart';
+import '../../services/update_service.dart';
 import '../../widgets/nexio_glass.dart';
 import '../../widgets/nexio_pickers.dart';
 import 'changelog_page.dart';
@@ -31,6 +34,7 @@ class _SettingsPageState extends State<SettingsPage> {
   String _presetId = 'zhipu';
   DateTime _birthday = DateTime.now().subtract(const Duration(days: 180));
   bool _initialized = false;
+  bool _checkingUpdate = false;
 
   @override
   void initState() {
@@ -68,6 +72,84 @@ class _SettingsPageState extends State<SettingsPage> {
 
   void _toast(String message) => ScaffoldMessenger.of(context)
       .showSnackBar(SnackBar(content: Text(message)));
+
+  Future<void> _checkUpdate() async {
+    if (_checkingUpdate) return;
+    setState(() => _checkingUpdate = true);
+    final result = await UpdateService.check();
+    if (!mounted) return;
+    setState(() => _checkingUpdate = false);
+    if (result.status == UpdateStatus.hasUpdate) {
+      await _showUpdateDialog(result);
+    } else if (result.status == UpdateStatus.upToDate) {
+      _toast('已是最新版本 v${result.currentVersion}');
+    } else if (result.status == UpdateStatus.noPublicRelease) {
+      _toast('仓库暂未发布正式版本（当前 v${result.currentVersion}）');
+    } else {
+      _toast(result.error ?? '检查失败，请稍后重试');
+    }
+  }
+
+  Future<void> _showUpdateDialog(UpdateCheckResult result) async {
+    final go = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('发现新版本 v${result.latestVersion}'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('当前版本 v${result.currentVersion}',
+                style: NexioType.footnote1),
+            if (result.publishedAt != null) ...[
+              const SizedBox(height: 4),
+              Text(
+                '发布于 ${result.publishedAt!.year}-${result.publishedAt!.month.toString().padLeft(2, '0')}-${result.publishedAt!.day.toString().padLeft(2, '0')}',
+                style: NexioType.footnote1,
+              ),
+            ],
+            if (result.notes != null) ...[
+              const SizedBox(height: 8),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 200),
+                child: SingleChildScrollView(
+                  child: Text(result.notes!,
+                      style: NexioType.body2.copyWith(height: 1.5)),
+                ),
+              ),
+            ],
+            const SizedBox(height: 8),
+            Text(UpdateRepository.repoUrl,
+                style: NexioType.footnote2
+                    .copyWith(color: NexioColors.textAction)),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('稍后'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('去下载'),
+          ),
+        ],
+      ),
+    );
+    if (go == true) {
+      await _openUrl(result.releaseUrl ?? UpdateRepository.releasesUrl);
+    }
+  }
+
+  Future<void> _openUrl(String url) async {
+    final uri = Uri.tryParse(url);
+    if (uri == null) return;
+    final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!opened && mounted) {
+      await Clipboard.setData(ClipboardData(text: url));
+      _toast('无法打开浏览器，链接已复制到剪贴板');
+    }
+  }
 
   Future<void> _pickBirthday() async {
     final d = await showNexioDatePicker(
@@ -314,6 +396,13 @@ class _SettingsPageState extends State<SettingsPage> {
                     context,
                     MaterialPageRoute(builder: (_) => const ChangelogPage()),
                   ),
+                ),
+                const Divider(),
+                NexioFormRow(
+                  icon: Icons.system_update_outlined,
+                  label: '检查更新',
+                  value: _checkingUpdate ? '检查中…' : '检查',
+                  onTap: _checkingUpdate ? null : _checkUpdate,
                 ),
               ],
             ),

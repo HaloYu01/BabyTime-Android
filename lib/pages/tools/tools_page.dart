@@ -83,20 +83,9 @@ class ToolsPage extends StatelessWidget {
             ),
           ),
         ),
-        NexioCard(
-          color: NexioColors.surface,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Icon(Icons.lock_outline,
-                  size: 18, color: NexioColors.textAction),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text('所有记录仅保存在本机；导出文件由你主动生成与分享。',
-                    style: NexioType.body2.copyWith(height: 1.5)),
-              ),
-            ],
-          ),
+        const NexioNoteCard(
+          icon: Icons.lock_outline,
+          text: '所有记录仅保存在本机；导出文件由你主动生成与分享。',
         ),
       ],
     );

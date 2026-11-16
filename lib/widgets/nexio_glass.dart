@@ -90,7 +90,7 @@ class GlassPanel extends StatelessWidget {
   }
 }
 
-/// 圆形玻璃按钮（默认 42dp，命中区 48dp，按压缩放 0.96）。
+/// 圆形模糊按钮（默认 42dp，命中区 48dp，按压缩放 0.96）。
 class GlassCircleButton extends StatefulWidget {
   const GlassCircleButton({
     super.key,
@@ -189,6 +189,64 @@ class NexioCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(padding: padding, child: child),
+      ),
+    );
+  }
+}
+
+/// 统一选择胶囊（选中态：浅蓝底 + 主色文字）。
+class NexioChoiceChip extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const NexioChoiceChip({
+    super.key,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ChoiceChip(
+      label: Text(label),
+      selected: selected,
+      shape: NexioShape.pill(),
+      selectedColor: NexioColors.tertiaryContainer,
+      backgroundColor: NexioColors.surface,
+      labelStyle: NexioType.body2.copyWith(
+          color: selected ? NexioColors.primary : NexioColors.textSecondary),
+      side: BorderSide.none,
+      onSelected: (_) => onTap(),
+    );
+  }
+}
+
+/// 统一提示卡（浅灰底 + 图标 + 一句话）。
+class NexioNoteCard extends StatelessWidget {
+  final String text;
+  final IconData icon;
+
+  const NexioNoteCard({
+    super.key,
+    required this.text,
+    this.icon = Icons.info_outline,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return NexioCard(
+      color: NexioColors.surface,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 18, color: NexioColors.textAction),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(text, style: NexioType.body2.copyWith(height: 1.5)),
+          ),
+        ],
       ),
     );
   }

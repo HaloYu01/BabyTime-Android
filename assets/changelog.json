@@ -6,6 +6,13 @@
       "items": [
         {
           "type": "added",
+          "title": "关于页「检查更新」",
+          "detail": "基于 GitHub Releases/Tags 检查新版本，可跳转下载页；无发布时提示当前为开发版",
+          "scope": "设置 / 关于",
+          "ref": "REQ-11"
+        },
+        {
+          "type": "added",
           "title": "工具页扩充：成长记录",
           "detail": "记录身高、体重、头围，查看生长曲线与累计变化",
           "scope": "工具页",
@@ -94,6 +101,27 @@
           "detail": "移除高光渐变、描边与外投影，仅保留背景模糊与低透明填充",
           "scope": "全站悬浮构件",
           "ref": "REQ-10"
+        },
+        {
+          "type": "changed",
+          "title": "代码与注释精简",
+          "detail": "删除未使用依赖 fl_chart 与未用令牌；合并 6 处重复选择胶囊、3 处提示卡与尺寸统计包装；无行为变更",
+          "scope": "工程",
+          "ref": "REQ-12"
+        },
+        {
+          "type": "changed",
+          "title": "照片存储优化",
+          "detail": "照片保存上限 1600px / 质量 80；删除记录时同步清理原图与抠图文件",
+          "scope": "照片记录",
+          "ref": "REQ-13"
+        },
+        {
+          "type": "removed",
+          "title": "移除未使用资源与依赖",
+          "detail": "移除 cupertino_icons 字体；发布构建采用 ABI 拆分（单设备约 18.5MB）",
+          "scope": "工程",
+          "ref": "REQ-13"
         },
         {
           "type": "fixed",

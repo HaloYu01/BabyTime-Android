@@ -7,6 +7,7 @@ import '../../../core/constants.dart';
 import '../../../core/nexio.dart';
 import '../../../models/meal_record.dart';
 import '../../../providers/diet_provider.dart';
+import '../../../widgets/nexio_glass.dart';
 import '../../../widgets/nexio_pickers.dart';
 
 /// 记录/编辑一次饮食的底部弹层。
@@ -116,16 +117,10 @@ class _MealRecordEditSheetState extends State<MealRecordEditSheet> {
       runSpacing: 6,
       children: options.map((o) {
         final active = selected == o;
-        return ChoiceChip(
-          label: Text(o),
+        return NexioChoiceChip(
+          label: o,
           selected: active,
-          shape: NexioShape.pill(),
-          selectedColor: NexioColors.tertiaryContainer,
-          backgroundColor: NexioColors.surface,
-          labelStyle: NexioType.body2.copyWith(
-              color: active ? NexioColors.primary : NexioColors.textSecondary),
-          side: BorderSide.none,
-          onSelected: (_) => onChanged(active ? null : o),
+          onTap: () => onChanged(active ? null : o),
         );
       }).toList(),
     );
@@ -184,18 +179,10 @@ class _MealRecordEditSheetState extends State<MealRecordEditSheet> {
                 runSpacing: 6,
                 children: quick.map((tag) {
                   final active = _typeCtrl.text.trim() == tag;
-                  return ChoiceChip(
-                    label: Text(tag),
+                  return NexioChoiceChip(
+                    label: tag,
                     selected: active,
-                    shape: NexioShape.pill(),
-                    selectedColor: NexioColors.tertiaryContainer,
-                    backgroundColor: NexioColors.surface,
-                    labelStyle: NexioType.body2.copyWith(
-                        color: active
-                            ? NexioColors.primary
-                            : NexioColors.textSecondary),
-                    side: BorderSide.none,
-                    onSelected: (_) => _applyQuickTag(tag),
+                    onTap: () => _applyQuickTag(tag),
                   );
                 }).toList(),
               ),

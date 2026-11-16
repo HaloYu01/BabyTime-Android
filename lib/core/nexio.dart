@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-/// Nexio 液态玻璃设计令牌（源自 nexio-liquid-glass-ui skill，浅色方案）。
+/// Nexio 设计令牌（源自 nexio-liquid-glass-ui / miuix-skill，浅色方案）。
 class NexioColors {
   static const primary = Color(0xFF3482FF);
   static const onPrimary = Color(0xFFFFFFFF);
   static const primaryContainer = Color(0xFF5D9BFF);
-  static const onPrimaryVariant = Color(0xFFAECDFF);
+
   static const tertiaryContainer = Color(0xFFEAF2FF);
   static const onTertiaryContainer = Color(0xFF3482FF);
   static const background = Color(0xFFFFFFFF);
@@ -25,18 +25,11 @@ class NexioColors {
   static const disabled = Color(0xFFB2B2B2);
   static const iconTint = Color(0xD9000000);
 
-  // 玻璃构件专用
-  static const glassFill = Color(0x47FFFFFF);
-  static const glassFillStrong = Color(0x73FFFFFF);
-  static const glassBorder = Color(0x8CFFFFFF);
-  static const glassShadow = Color(0x1A000000);
-  static const barFill = Color(0x80FAFAFA);
-
-  // 纯模糊模式（2026-11-16：玻璃拟态降级，仅保留 blur + 低透明填充）
+// 模糊构件与选择态
+  static const selectorFill = Color(0x0F000000);
   static const blurFill = Color(0x1AFFFFFF); // 白 10%
   static const barBlurFill = Color(0x1FFFFFFF); // 白 12%
-  static const selectorFill = Color(0x0F000000);
-  static const windowDimming = Color(0x4D000000);
+
 
   // 柔光背景光斑
   static const glowBlue = Color(0x336C8EF5);
@@ -88,15 +81,11 @@ class NexioShape {
 class NexioMotion {
   static const quartOut = Cubic(0.165, 0.84, 0.44, 1.0);
   static const cubicOut = Cubic(0.215, 0.61, 0.355, 1.0);
-  static const quintOut = Cubic(0.23, 1.0, 0.32, 1.0);
   static const page = Cubic(0.3, 0.5, 0.2, 1.0);
-  static const secondaryPageOut = Cubic(0.36, 0.18, 0.3, 0.85);
   static const overshoot = Cubic(0.34, 1.36, 0.64, 1.0);
-  static const fastOutSlowIn = Cubic(0.4, 0.0, 0.2, 1.0);
 
   static const Duration reveal = Duration(milliseconds: 260);
   static const Duration dismiss = Duration(milliseconds: 200);
-  static const Duration material = Duration(milliseconds: 400);
   static const Duration tabSwitch = Duration(milliseconds: 300);
   static const Duration press = Duration(milliseconds: 180);
 

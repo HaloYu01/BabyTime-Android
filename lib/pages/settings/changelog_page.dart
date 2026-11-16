@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/app_info.dart';
 import '../../core/nexio.dart';
+import '../../core/text_utils.dart';
 import '../../models/changelog.dart';
 import '../../services/changelog_service.dart';
 import '../../widgets/common_widgets.dart';
@@ -108,13 +109,11 @@ class _VersionCard extends StatefulWidget {
 class _VersionCardState extends State<_VersionCard> {
   late bool _expanded = widget.isCurrent;
 
-  static String _two(int v) => v.toString().padLeft(2, '0');
-
   @override
   Widget build(BuildContext context) {
     final entry = widget.entry;
     final date =
-        '${entry.date.year}-${_two(entry.date.month)}-${_two(entry.date.day)}';
+        '${entry.date.year}-${twoDigits(entry.date.month)}-${twoDigits(entry.date.day)}';
     return NexioCard(
       color: widget.isCurrent
           ? NexioColors.tertiaryContainer

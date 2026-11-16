@@ -44,21 +44,19 @@ app.*.map.json
 /android/app/release
 # Widget Preview related
 .widget_preview/
+
 # 本地环境与工具产物
 .codeartsdoer/
 .arts/
 .github/modernize/
 devtools_options.yaml
 local.properties
-app-release.apk
+*.apk
+hs_err_pid*.log
+replay_pid*.log
 
-# Flutter 平台生成文件
+# 构建产物
 **/build/
+android/.gradle/
 **/generated_plugin_registrant.*
 **/generated_plugins.cmake
-**/ios/Flutter/Generated.xcconfig
-**/ios/Flutter/flutter_export_environment.sh
-**/ios/Flutter/ephemeral/
-**/macos/Flutter/ephemeral/
-**/linux/flutter/ephemeral/
-**/windows/flutter/ephemeral/

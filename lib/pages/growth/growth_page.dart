@@ -85,18 +85,10 @@ class _GrowthPageState extends State<GrowthPage> {
                 spacing: 8,
                 children: ['身高', '体重', '头围'].asMap().entries.map((e) {
                   final active = _metric == e.key;
-                  return ChoiceChip(
-                    label: Text(e.value),
+                  return NexioChoiceChip(
+                    label: e.value,
                     selected: active,
-                    shape: NexioShape.pill(),
-                    selectedColor: NexioColors.tertiaryContainer,
-                    backgroundColor: NexioColors.surface,
-                    labelStyle: NexioType.body2.copyWith(
-                        color: active
-                            ? NexioColors.primary
-                            : NexioColors.textSecondary),
-                    side: BorderSide.none,
-                    onSelected: (_) => setState(() => _metric = e.key),
+                    onTap: () => setState(() => _metric = e.key),
                   );
                 }).toList(),
               ),

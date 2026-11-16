@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -35,7 +37,12 @@ class GalleryProvider extends ChangeNotifier {
     try {
       final source =
           fromCamera ? ImageSource.camera : ImageSource.gallery;
-      final x = await _picker.pickImage(source: source, imageQuality: 90);
+      final x = await _picker.pickImage(
+        source: source,
+        maxWidth: 1600,
+        maxHeight: 1600,
+        imageQuality: 80,
+      );
       return x?.path;
     } catch (e) {
       lastError = '获取图片失败：$e';
@@ -99,6 +106,15 @@ class GalleryProvider extends ChangeNotifier {
 
   Future<void> delete(PhotoMemory photo) async {
     if (photo.id != null) await _db.deletePhotoMemory(photo.id!);
+    for (final path in [photo.originalPath, photo.cutoutPath]) {
+      if (path == null || path.isEmpty) continue;
+      try {
+        final file = File(path);
+        if (await file.exists()) await file.delete();
+      } catch (_) {
+        // 文件已被系统清理时忽略
+      }
+    }
     photos.removeWhere((p) => p.id == photo.id);
     notifyListeners();
   }

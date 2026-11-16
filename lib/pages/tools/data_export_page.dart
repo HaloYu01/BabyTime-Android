@@ -137,20 +137,8 @@ class _DataExportPageState extends State<DataExportPage> {
               ],
             ),
           ),
-        NexioCard(
-          color: NexioColors.surface,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Icon(Icons.info_outline,
-                  size: 18, color: NexioColors.textAction),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text('导出文件保存在应用文档目录，可通过系统文件管理或分享应用访问。',
-                    style: NexioType.body2.copyWith(height: 1.5)),
-              ),
-            ],
-          ),
+        const NexioNoteCard(
+          text: '导出文件保存在应用文档目录，可通过系统文件管理或分享应用访问。',
         ),
       ],
     );

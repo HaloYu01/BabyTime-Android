@@ -165,18 +165,10 @@ class _ShoeHelperPageState extends State<ShoeHelperPage> {
                 spacing: 8,
                 children: [0.5, 1.0, 1.5].map((v) {
                   final selected = _allowance == v;
-                  return ChoiceChip(
-                    label: Text('$v cm'),
+                  return NexioChoiceChip(
+                    label: '$v cm',
                     selected: selected,
-                    shape: NexioShape.pill(),
-                    selectedColor: NexioColors.tertiaryContainer,
-                    backgroundColor: NexioColors.surface,
-                    labelStyle: NexioType.body2.copyWith(
-                        color: selected
-                            ? NexioColors.primary
-                            : NexioColors.textSecondary),
-                    side: BorderSide.none,
-                    onSelected: (_) => setState(() => _allowance = v),
+                    onTap: () => setState(() => _allowance = v),
                   );
                 }).toList(),
               ),
@@ -211,9 +203,9 @@ class _ShoeHelperPageState extends State<ShoeHelperPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _SizeStat(label: '中国码', value: match.row.cnSize),
-                  _SizeStat(label: 'EU 欧码', value: match.row.euSize),
-                  _SizeStat(label: 'US 美码', value: match.row.usSize),
+                  NexioStat(label: '中国码', value: match.row.cnSize),
+                  NexioStat(label: 'EU 欧码', value: match.row.euSize),
+                  NexioStat(label: 'US 美码', value: match.row.usSize),
                 ],
               ),
               const SizedBox(height: 14),
@@ -329,17 +321,6 @@ class _ShoeHelperPageState extends State<ShoeHelperPage> {
                 textAlign: TextAlign.center, style: NexioType.footnote1),
           ))
       .toList();
-}
-
-class _SizeStat extends StatelessWidget {
-  final String label;
-  final String value;
-  const _SizeStat({required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return NexioStat(label: label, value: value);
-  }
 }
 
 class _Tip extends StatelessWidget {

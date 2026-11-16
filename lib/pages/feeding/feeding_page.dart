@@ -137,18 +137,10 @@ class _FeedingPageState extends State<FeedingPage> {
                 spacing: 8,
                 children: _types.map((t) {
                   final active = _type == t;
-                  return ChoiceChip(
-                    label: Text(t),
+                  return NexioChoiceChip(
+                    label: t,
                     selected: active,
-                    shape: NexioShape.pill(),
-                    selectedColor: NexioColors.tertiaryContainer,
-                    backgroundColor: NexioColors.surface,
-                    labelStyle: NexioType.body2.copyWith(
-                        color: active
-                            ? NexioColors.primary
-                            : NexioColors.textSecondary),
-                    side: BorderSide.none,
-                    onSelected: (_) => setState(() => _type = t),
+                    onTap: () => setState(() => _type = t),
                   );
                 }).toList(),
               ),
@@ -210,20 +202,8 @@ class _FeedingPageState extends State<FeedingPage> {
                   ],
                 ),
         ),
-        NexioCard(
-          color: NexioColors.surface,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Icon(Icons.info_outline,
-                  size: 18, color: NexioColors.textAction),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text('时长按开始/结束时间计算，切到后台也不会丢失；瓶喂可填写奶量。',
-                    style: NexioType.body2.copyWith(height: 1.5)),
-              ),
-            ],
-          ),
+        const NexioNoteCard(
+          text: '时长按开始/结束时间计算，切到后台也不会丢失；瓶喂可填写奶量。',
         ),
       ],
     );

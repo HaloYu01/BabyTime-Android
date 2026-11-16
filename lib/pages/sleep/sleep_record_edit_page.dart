@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../core/constants.dart';
 import '../../core/nexio.dart';
+import '../../core/text_utils.dart';
 import '../../models/sleep_record.dart';
 import '../../providers/sleep_provider.dart';
 import '../../widgets/nexio_glass.dart';
@@ -26,8 +27,6 @@ class _SleepRecordEditPageState extends State<SleepRecordEditPage> {
   final _cryingCtrl = TextEditingController();
   final _noteCtrl = TextEditingController();
   String? _activity;
-
-  static String _two(int v) => v.toString().padLeft(2, '0');
 
   @override
   void dispose() {
@@ -95,16 +94,10 @@ class _SleepRecordEditPageState extends State<SleepRecordEditPage> {
       runSpacing: 6,
       children: activityLevels.map((a) {
         final active = _activity == a;
-        return ChoiceChip(
-          label: Text(a),
+        return NexioChoiceChip(
+          label: a,
           selected: active,
-          shape: NexioShape.pill(),
-          selectedColor: NexioColors.tertiaryContainer,
-          backgroundColor: NexioColors.surface,
-          labelStyle: NexioType.body2.copyWith(
-              color: active ? NexioColors.primary : NexioColors.textSecondary),
-          side: BorderSide.none,
-          onSelected: (_) => setState(() => _activity = active ? null : a),
+          onTap: () => setState(() => _activity = active ? null : a),
         );
       }).toList(),
     );
@@ -130,14 +123,14 @@ class _SleepRecordEditPageState extends State<SleepRecordEditPage> {
                 icon: Icons.calendar_today_outlined,
                 label: '日期',
                 value:
-                    '${_date.year}-${_two(_date.month)}-${_two(_date.day)}',
+                    '${_date.year}-${twoDigits(_date.month)}-${twoDigits(_date.day)}',
                 onTap: _pickDate,
               ),
               const Divider(),
               NexioFormRow(
                 icon: Icons.dark_mode_outlined,
                 label: '入睡时间',
-                value: '${_two(_bedTime.hour)}:${_two(_bedTime.minute)}',
+                value: '${twoDigits(_bedTime.hour)}:${twoDigits(_bedTime.minute)}',
                 onTap: _pickBedTime,
               ),
               const Divider(),
@@ -146,7 +139,7 @@ class _SleepRecordEditPageState extends State<SleepRecordEditPage> {
                 label: '最终醒来',
                 value: _wakeTime == null
                     ? '未选（可选）'
-                    : '${_two(_wakeTime!.hour)}:${_two(_wakeTime!.minute)}',
+                    : '${twoDigits(_wakeTime!.hour)}:${twoDigits(_wakeTime!.minute)}',
                 onTap: _pickWakeTime,
               ),
             ],
