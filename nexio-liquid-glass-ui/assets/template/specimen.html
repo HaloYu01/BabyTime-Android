@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Nexio 液态玻璃 · 令牌样张</title>
+<link rel="stylesheet" href="nexio-tokens.css" />
+<style>
+  body { background: var(--nx-bg); color: var(--nx-on-bg); }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 24px 16px 96px; }
+  .hd { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .hd h1 { font-size: var(--nx-t2); margin: 0; flex: 1; letter-spacing: .2px; }
+  .toggle { border: 0; background: var(--nx-surface-container); color: var(--nx-on-bg);
+            height: 36px; padding: 0 14px; border-radius: 999px; font-size: 13px; cursor: pointer;
+            box-shadow: inset 0 0 0 1px var(--nx-outline); }
+  .sub { color: var(--nx-text-summary); font-size: var(--nx-body2); margin: 0 0 24px; }
+  section { margin: 28px 0; }
+  h2 { font-size: var(--nx-body2); font-weight: 700; color: var(--nx-small-title);
+       margin: 0 0 12px; padding-left: 2px; }
+  .grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .sw { border-radius: 14px; padding: 10px; min-height: 72px; display: flex; flex-direction: column;
+        justify-content: flex-end; box-shadow: inset 0 0 0 1px rgba(128,128,128,.16); }
+  .sw b { font-size: 12px; font-weight: 600; }
+  .sw span { font-size: 11px; opacity: .72; font-family: ui-monospace, Menlo, monospace; }
+
+  .type-row { display: flex; align-items: baseline; gap: 14px; padding: 6px 0; border-bottom: 1px solid var(--nx-divider); }
+  .type-row i { width: 92px; font-style: normal; font-size: 11px; color: var(--nx-text-action); font-family: ui-monospace, Menlo, monospace; }
+
+  .wall {
+    position: relative; border-radius: 24px; overflow: hidden; padding: 22px;
+    background:
+      radial-gradient(120% 90% at 12% 8%, #9fd7ff 0%, transparent 48%),
+      radial-gradient(100% 80% at 92% 18%, #ffd9e8 0%, transparent 52%),
+      radial-gradient(120% 100% at 60% 100%, #b9f3d4 0%, transparent 60%),
+      linear-gradient(160deg, #dfe9ff, #f6e8ff 46%, #e8fff3);
+  }
+  html[data-theme="dark"] .wall {
+    background:
+      radial-gradient(120% 90% at 12% 8%, #1c4a6e 0%, transparent 48%),
+      radial-gradient(100% 80% at 92% 18%, #5b2237 0%, transparent 52%),
+      radial-gradient(120% 100% at 60% 100%, #164a34 0%, transparent 60%),
+      linear-gradient(160deg, #0e1622, #1b1226 46%, #0d1a15);
+  }
+  .wall-label { position: absolute; right: 14px; bottom: 12px; font-size: 11px; color: rgba(255,255,255,.7); }
+
+  .glass-demo { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-start; }
+  .glass-card { flex: 1 1 220px; min-height: 132px; border-radius: var(--nx-radius-card);
+                padding: 16px; color: rgba(0,0,0,.86); }
+  html[data-theme="dark"] .glass-card { color: rgba(255,255,255,.9); }
+  .glass-card h3 { margin: 0 0 6px; font-size: 16px; }
+  .glass-card p { margin: 0; font-size: 13px; opacity: .86; line-height: 1.5; }
+  .glass-card .tagline { margin-top: 12px; font-size: 11px; opacity: .7; }
+
+  .bar-demo { display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; }
+  .seg-wrap { width: min(360px, 100%); }
+
+  .row-demo { background: var(--nx-surface-container); border-radius: var(--nx-radius-card); overflow: hidden; }
+  .kv { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+  .chip { font-size: 11px; padding: 5px 10px; border-radius: 999px; background: var(--nx-surface-container);
+          box-shadow: inset 0 0 0 1px var(--nx-outline); color: var(--nx-text-summary); }
+
+  .play { margin-top: 12px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .pill-btn { border: 0; border-radius: 999px; height: 40px; padding: 0 18px; font-size: 15px;
+              cursor: pointer; background: var(--nx-primary); color: var(--nx-on-primary); }
+  .pill-btn.ghost { background: var(--nx-surface-container); color: var(--nx-on-bg);
+                    box-shadow: inset 0 0 0 1px var(--nx-outline); }
+  .reveal-stage { margin-top: 14px; display: grid; gap: 10px; grid-template-columns: repeat(3, 1fr); }
+  .reveal-stage .cell { height: 64px; border-radius: var(--nx-radius-item);
+                        background: linear-gradient(135deg, var(--nx-surface-container), var(--nx-surface));
+                        box-shadow: inset 0 0 0 1px var(--nx-outline); }
+  footer { margin-top: 40px; font-size: 11px; color: var(--nx-text-action); line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hd">
+    <h1>Nexio 液态玻璃</h1>
+    <button class="toggle" id="tg">切换深色</button>
+  </div>
+  <p class="sub">令牌样张 · 参数来自 NexioSchedule（HyperOS 4 / Miuix）。网页为近似实现：颜色、几何、动效可 1:1，玻璃只能做到"模糊 + 边缘光"。</p>
+
+  <section>
+    <h2>颜色 · 浅 / 深</h2>
+    <div class="grid" id="colors"></div>
+  </section>
+
+  <section>
+    <h2>字号阶梯</h2>
+    <div id="types"></div>
+  </section>
+
+  <section>
+    <h2>玻璃（放在彩色壁纸上才看得见）</h2>
+    <div class="wall">
+      <div class="glass-demo">
+        <div class="glass-card nx-glass nx-press">
+          <h3>柔光玻璃</h3>
+          <p>模糊 12px · 饱和 200% · 上缘光 55% · 下缘暗 16% · 内厚度 24px。</p>
+          <div class="tagline">TokenTone / ThemeFill</div>
+        </div>
+        <div class="glass-card nx-glass" style="--nx-glass-fill: rgba(255,255,255,.06); flex:1 1 160px;">
+          <h3 style="font-size:14px">极透</h3>
+          <p style="font-size:12px">NoneFill：不叠实色，透出背景。</p>
+        </div>
+      </div>
+      <span class="wall-label">近似：backdrop-filter（无折射）</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>悬浮构件</h2>
+    <div class="bar-demo">
+      <div class="nx-pill" style="padding-right:14px">
+        <button class="nx-tab" aria-selected="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 5v-2M15 5v-2"/></svg>
+          今日
+        </button>
+        <button class="nx-tab">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
+          课程表
+        </button>
+      </div>
+      <button class="nx-circle-btn nx-glass" aria-label="设置" style="--nx-m:1">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 8h10M18 8h2M4 16h4M12 16h8"/><circle cx="16" cy="8" r="2.4"/><circle cx="10" cy="16" r="2.4"/></svg>
+      </button>
+    </div>
+    <div class="kv">
+      <span class="chip">胶囊 56 / 滑块 48 / 间距 10</span>
+      <span class="chip">每格占宽 21%</span>
+      <span class="chip">顶栏圆钮 42</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>分段胶囊 + 卡片 + 设置行</h2>
+    <div class="seg-wrap">
+      <div class="nx-segment" id="seg">
+        <div class="nx-segment__selector" style="width:calc(33.333% - 8px)"></div>
+        <button class="nx-segment__btn">全部</button>
+        <button class="nx-segment__btn">进行中</button>
+        <button class="nx-segment__btn">已完成</button>
+      </div>
+    </div>
+    <div class="nx-card" style="margin-top:12px">
+      <button class="nx-row">
+        <span class="nx-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h10"/></svg></span>
+        <span class="nx-row__title">课表设置<span class="nx-row__summary">第 9 周 · 共 20 周</span></span>
+        <span class="nx-row__action">›</span>
+      </button>
+      <button class="nx-row">
+        <span class="nx-icon-box" style="background:var(--nx-surface-high); color:var(--nx-on-bg)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8h12M6 12h12M6 16h8"/></svg></span>
+        <span class="nx-row__title">课程提醒<span class="nx-row__summary">提前 10 分钟</span></span>
+        <span class="nx-switch" data-on="true" style="align-self:center"></span>
+      </button>
+    </div>
+    <div class="kv">
+      <span class="chip">卡片圆角 20</span><span class="chip">行内边距 16 / 行高 56</span>
+      <span class="chip">摘要 60% · 动作 40%</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>内容卡（课卡口径：圆角 10）</h2>
+    <div style="display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))">
+      <div class="nx-item" style="background:#e8f3ea;color:#2f6b3c">统计学<span class="nx-item__meta">@博105 · 张晓薇</span><span class="nx-item__dot" style="background:#2f6b3c"></span></div>
+      <div class="nx-item" style="background:#fdeada;color:#8a5424">马克思主义基本原理<span class="nx-item__meta">@博107 · 孔维</span><span class="nx-item__dot" style="background:#8a5424"></span></div>
+      <div class="nx-item" style="background:#fbe0ea;color:#8a3450">拓展英语I<span class="nx-item__meta">@安503 · 魏佳</span></div>
+      <div class="nx-item" style="background:#e9e6fb;color:#4a3f8f">概率论与数理统计<span class="nx-item__meta">@博109 · 李薇</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>动效</h2>
+    <div class="reveal-stage" id="stage">
+      <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+    </div>
+    <div class="play">
+      <button class="pill-btn" id="playReveal">重播卡片入场</button>
+      <button class="pill-btn ghost" id="playPress">按住看高光</button>
+    </div>
+    <div class="kv">
+      <span class="chip">入场 260ms · 退场 200ms</span>
+      <span class="chip">120ms + i×56ms</span>
+      <span class="chip">上浮 8 · 缩放 0.97 · 模糊 12</span>
+      <span class="chip">切页 spring 320/300</span>
+    </div>
+  </section>
+
+  <footer>
+    尺寸单位：Compose dp / sp；网页 1px ≈ 1dp（@1x）。<br>
+    来源：HaoZai000/NexioSchedule（AGPL-3.0）。设计数值属事实性数据；整段移植源码需遵守 AGPL。<br>
+    完整参数见 skill 的 references/design-tokens.md、glass-material.md、components.md、motion.md。
+  </footer>
+</div>
+
+<script>
+(() => {
+  const html = document.documentElement;
+  const tg = document.getElementById('tg');
+  tg.onclick = () => {
+    const dark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', dark ? 'light' : 'dark');
+    tg.textContent = dark ? '切换深色' : '切换浅色';
+    render();
+  };
+
+  const COLORS = [
+    ['background', 'bg'], ['surface', 'surface'], ['surfaceContainer', '卡片'],
+    ['primary', '主色'], ['onBackground', '正文'], ['textSummary', '摘要'],
+    ['textAction', '动作/箭头'], ['divider', '分隔线'], ['smallTitle', '小标题'],
+    ['error', '错误'], ['barSurface', '底栏底'], ['selector', '滑块']
+  ];
+
+  function cssVar(name) {
+    const map = { background: '--nx-bg', surface: '--nx-surface', surfaceContainer: '--nx-surface-container',
+      primary: '--nx-primary', onBackground: '--nx-on-bg', textSummary: '--nx-text-summary',
+      textAction: '--nx-text-action', divider: '--nx-divider', smallTitle: '--nx-small-title',
+      error: '--nx-error', barSurface: '--nx-bar', selector: '--nx-selector' };
+    return getComputedStyle(html).getPropertyValue(map[name]).trim();
+  }
+
+  // 依据颜色亮度自动选黑/白字，避免浅色块上出现白字
+  function luminance(color) {
+    let r = 255, g = 255, b = 255;
+    const hex = color.match(/^#([0-9a-f]{6})$/i);
+    if (hex) {
+      const v = hex[1];
+      r = parseInt(v.slice(0, 2), 16); g = parseInt(v.slice(2, 4), 16); b = parseInt(v.slice(4, 6), 16);
+    } else {
+      const m = color.match(/rgba?\(([^)]+)\)/i);
+      if (m) {
+        const p = m[1].split(',').map(s => parseFloat(s.trim()));
+        const a = p.length > 3 ? p[3] : 1;
+        // 与白色底/深色底合成后再算亮度
+        const base = html.getAttribute('data-theme') === 'dark' ? 36 : 255;
+        r = p[0] * a + base * (1 - a);
+        g = p[1] * a + base * (1 - a);
+        b = p[2] * a + base * (1 - a);
+      }
+    }
+    const lin = c => { c /= 255; return c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); };
+    return .2126 * lin(r) + .7152 * lin(g) + .0722 * lin(b);
+  }
+
+  function render() {
+    const box = document.getElementById('colors');
+    box.innerHTML = COLORS.map(([n, label]) => {
+      const v = cssVar(n);
+      const fg = luminance(v) > 0.45 ? 'rgba(0,0,0,.86)' : 'rgba(255,255,255,.92)';
+      return `<div class="sw" style="background:${v};color:${fg}">
+        <b>${label}</b><span>${n}</span><span style="opacity:.6">${v}</span></div>`;
+    }).join('');
+  }
+
+  const TYPES = [
+    ['32 / title1', '32px', 600], ['24 / title2', '24px', 600], ['20 / title3', '20px', 600],
+    ['18 / title4', '18px', 600], ['17 / main', '17px', 400], ['16 / body1', '16px', 400],
+    ['14 / body2', '14px', 400], ['13 / footnote1', '13px', 400], ['11 / footnote2', '11px', 400]
+  ];
+  document.getElementById('types').innerHTML = TYPES.map(([label, size, w]) =>
+    `<div class="type-row"><i>${label}</i><span style="font-size:${size};font-weight:${w}">第9周 · 统计学</span></div>`
+  ).join('');
+
+  // 分段滑块：按实际槽宽算像素，避免用 % 造成错位
+  const seg = document.getElementById('seg');
+  const sel = seg.querySelector('.nx-segment__selector');
+  const btns = [...seg.querySelectorAll('.nx-segment__btn')];
+  let segIndex = 0;
+  function placeSeg(i) {
+    const inner = seg.clientWidth - 8;          // 左右各 4px 内边距
+    const slot = inner / btns.length;
+    sel.style.width = `${slot - 1}px`;           // 左右各内缩 0.5px
+    sel.style.transform = `translateX(${i * slot}px)`;
+    segIndex = i;
+  }
+  btns.forEach((b, i) => b.onclick = () => placeSeg(i));
+  addEventListener('resize', () => placeSeg(segIndex));
+  placeSeg(0);
+
+  // 卡片入场重播
+  const stage = document.getElementById('stage');
+  document.getElementById('playReveal').onclick = () => {
+    [...stage.children].forEach((c, i) => {
+      c.classList.remove('nx-reveal', 'nx-glass');
+      void c.offsetWidth;
+      c.style.setProperty('--i', i);
+      c.classList.add('nx-reveal', 'nx-glass');
+      c.style.setProperty('--nx-glass-fill', 'rgba(255,255,255,.18)');
+    });
+  };
+
+  // 按压高光跟随
+  document.getElementById('playPress').addEventListener('pointerdown', (e) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty('--hx', `${e.clientX - r.left}px`);
+    e.currentTarget.style.setProperty('--hy', `${e.clientY - r.top}px`);
+  });
+
+  document.querySelectorAll('.nx-press').forEach(el => {
+    el.addEventListener('pointerdown', e => {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--hx', `${e.clientX - r.left}px`);
+      el.style.setProperty('--hy', `${e.clientY - r.top}px`);
+    });
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

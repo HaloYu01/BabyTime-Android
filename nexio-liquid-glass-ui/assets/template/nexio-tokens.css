@@ -1,0 +1,265 @@
+/* ============================================================
+   Nexio 液态玻璃 · 设计令牌与构件（Web 近似实现）
+   来源：HaoZai000/NexioSchedule（AGPL-3.0）设计参数
+   用法：<html data-theme="light|dark">，引入本文件即可。
+   ============================================================ */
+
+:root {
+  /* ---- 颜色：浅色 ---- */
+  --nx-bg: #ffffff;
+  --nx-surface: #f4f4f4;
+  --nx-surface-container: #ffffff;
+  --nx-surface-high: #e8e8e8;
+  --nx-primary: #3482ff;
+  --nx-on-primary: #ffffff;
+  --nx-on-bg: #000000;
+  --nx-on-bg-variant: #8c93b0;
+  --nx-text-2: rgba(0, 0, 0, .8);
+  --nx-text-summary: rgba(0, 0, 0, .6);
+  --nx-text-action: rgba(0, 0, 0, .4);
+  --nx-text-disabled: #b2b2b2;
+  --nx-divider: #e0e0e0;
+  --nx-outline: #d9d9d9;
+  --nx-small-title: #8f9cae;
+  --nx-error: #e94634;
+  --nx-on-error: #ffffff;
+  --nx-bar: rgba(250, 250, 250, .5);
+  --nx-segment-idle: #ffffff;
+  --nx-selector: rgba(0, 0, 0, .06);
+  --nx-icon: rgba(0, 0, 0, .85);
+  --nx-icon-tab: rgba(0, 0, 0, .8);
+  --nx-dim: rgba(0, 0, 0, .3);
+  --nx-shadow: 0 4px 24px rgba(0, 0, 0, .10);
+  --nx-shadow-soft: 0 10px 24px rgba(0, 0, 0, .07);
+
+  /* ---- 几何 ---- */
+  --nx-radius-card: 20px;
+  --nx-radius-item: 10px;
+  --nx-radius-icon: 8px;
+  --nx-radius-menu: 16px;
+  --nx-bar-h: 56px;
+  --nx-selector-h: 48px;
+  --nx-segment-h: 42px;
+  --nx-segment-selector-h: 34px;
+  --nx-btn-circle: 42px;
+  --nx-gap: 10px;
+  --nx-row-pad: 16px;
+  --nx-group-gap: 12px;
+  --nx-float-bottom: max(calc(env(safe-area-inset-bottom, 0px) + 2px), 22px);
+
+  /* ---- 字体 ---- */
+  --nx-font: -apple-system, "MiSans", "SF Pro Text", "Segoe UI", Roboto, "Noto Sans SC", sans-serif;
+  --nx-t1: 32px; --nx-t2: 24px; --nx-t3: 20px; --nx-t4: 18px;
+  --nx-main: 17px; --nx-h2: 16px; --nx-body2: 14px; --nx-fn1: 13px; --nx-fn2: 11px;
+
+  /* ---- 动效 ---- */
+  --nx-out-quart: cubic-bezier(.165, .84, .44, 1);
+  --nx-out-cubic: cubic-bezier(.215, .61, .355, 1);
+  --nx-out-quint: cubic-bezier(.23, 1, .32, 1);
+  --nx-page: cubic-bezier(.3, .5, .2, 1);
+  --nx-spring: cubic-bezier(.34, 1.36, .64, 1);
+  --nx-dur-fast: .18s;
+  --nx-dur-card: .26s;
+  --nx-dur-text: .32s;
+  --nx-dur-morph: .54s;
+}
+
+html[data-theme="dark"] {
+  --nx-bg: #242424;
+  --nx-surface: #000000;
+  --nx-surface-container: #242424;
+  --nx-surface-high: #2d2d2d;
+  --nx-primary: #277af7;
+  --nx-on-bg: rgba(255, 255, 255, .9);
+  --nx-on-bg-variant: #787e96;
+  --nx-text-2: rgba(255, 255, 255, .8);
+  --nx-text-summary: rgba(255, 255, 255, .5);
+  --nx-text-action: rgba(255, 255, 255, .4);
+  --nx-text-disabled: #666666;
+  --nx-divider: #393939;
+  --nx-outline: #404040;
+  --nx-small-title: #98a4b6;
+  --nx-error: #f12522;
+  --nx-bar: rgba(36, 36, 36, .6);
+  --nx-segment-idle: #242424;
+  --nx-selector: rgba(255, 255, 255, .1);
+  --nx-icon: rgba(255, 255, 255, .85);
+  --nx-icon-tab: rgba(255, 255, 255, .8);
+  --nx-dim: rgba(0, 0, 0, .6);
+  --nx-shadow: 0 4px 24px rgba(0, 0, 0, .2);
+  --nx-shadow-soft: 0 10px 24px rgba(0, 0, 0, .28);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--nx-bg); color: var(--nx-on-bg); font-family: var(--nx-font); }
+body { -webkit-font-smoothing: antialiased; }
+
+/* ---------- 玻璃 ---------- */
+.nx-glass {
+  position: relative;
+  background: var(--nx-glass-fill, rgba(255, 255, 255, .28));
+  backdrop-filter: blur(var(--nx-glass-blur, 12px)) saturate(var(--nx-glass-sat, 200%)) brightness(1.04);
+  -webkit-backdrop-filter: blur(var(--nx-glass-blur, 12px)) saturate(var(--nx-glass-sat, 200%)) brightness(1.04);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .55),
+    inset 0 -1px 0 rgba(0, 0, 0, .16),
+    inset 0 0 24px rgba(255, 255, 255, .06),
+    var(--nx-shadow-soft);
+  overflow: hidden;
+  isolation: isolate;
+}
+html[data-theme="dark"] .nx-glass { --nx-glass-fill: rgba(0, 0, 0, .32); }
+.nx-glass::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(135deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0) 42%);
+  mix-blend-mode: screen;
+}
+/* 不支持 backdrop-filter 时退回实底（等同 NONE 档） */
+@supports not (backdrop-filter: blur(1px)) {
+  .nx-glass { background: var(--nx-surface-container); box-shadow: inset 0 0 0 .8px var(--nx-outline), var(--nx-shadow-soft); }
+  .nx-glass::before { display: none; }
+}
+
+/* ---------- 顶栏 ---------- */
+.nx-topbar {
+  position: sticky; top: 0; z-index: 20;
+  height: 52px; display: flex; align-items: center; gap: 8px;
+  padding: 0 16px;
+  background: rgba(255, 255, 255, calc(.72 * var(--nx-m, 0)));
+  backdrop-filter: blur(calc(12px * var(--nx-m, 0)));
+  -webkit-backdrop-filter: blur(calc(12px * var(--nx-m, 0)));
+  transition: background .6s var(--nx-out-quart), backdrop-filter .4s var(--nx-out-quart);
+}
+html[data-theme="dark"] .nx-topbar { background: rgba(36, 36, 36, calc(.72 * var(--nx-m, 0))); }
+.nx-topbar__title { flex: 1; text-align: center; font-size: 18px; font-weight: 600; }
+
+.nx-circle-btn {
+  width: var(--nx-btn-circle); height: var(--nx-btn-circle);
+  flex: 0 0 var(--nx-btn-circle);
+  border: 0; padding: 0; border-radius: 999px;
+  display: grid; place-items: center;
+  color: var(--nx-icon); cursor: pointer;
+  background: var(--nx-bar);
+  backdrop-filter: blur(6px) saturate(180%);
+  -webkit-backdrop-filter: blur(6px) saturate(180%);
+  opacity: calc(.35 + .65 * var(--nx-m, 1));
+  transition: transform var(--nx-dur-fast) var(--nx-out-cubic), opacity .4s;
+}
+.nx-circle-btn:active { transform: scale(.952); }
+.nx-circle-btn svg { width: 24px; height: 24px; }
+
+/* ---------- 底栏 ---------- */
+.nx-bottom {
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: var(--nx-float-bottom);
+  display: flex; gap: var(--nx-gap); align-items: center;
+  z-index: 30;
+}
+.nx-pill {
+  height: var(--nx-bar-h); padding: 4px; display: flex; align-items: center;
+  border-radius: 999px; background: var(--nx-bar);
+  backdrop-filter: blur(12px) saturate(200%);
+  -webkit-backdrop-filter: blur(12px) saturate(200%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), var(--nx-shadow-soft);
+}
+.nx-tab {
+  height: var(--nx-selector-h); border-radius: 999px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  min-width: calc(21vw - 4px); padding: 0 10px;
+  border: 0; background: transparent; color: var(--nx-icon-tab);
+  font-size: var(--nx-fn2); cursor: pointer;
+  transition: background var(--nx-dur-text) var(--nx-spring);
+}
+.nx-tab[aria-selected="true"] { background: var(--nx-selector); }
+
+/* ---------- 分段胶囊 ---------- */
+.nx-segment {
+  position: relative; height: var(--nx-segment-h); padding: 4px; border-radius: 999px;
+  background: var(--nx-segment-idle); display: flex; align-items: center;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4), var(--nx-shadow-soft);
+}
+.nx-segment__btn {
+  position: relative; z-index: 1; flex: 1; height: 100%;
+  border: 0; background: transparent; color: var(--nx-text-2);
+  font-size: 14px; font-weight: 500; cursor: pointer;
+}
+.nx-segment__selector {
+  position: absolute; top: 4px; bottom: 4px; left: 4px;
+  height: var(--nx-segment-selector-h); border-radius: 999px;
+  background: var(--nx-selector);
+  transition: transform var(--nx-dur-text) var(--nx-spring), width var(--nx-dur-text) var(--nx-spring);
+}
+
+/* ---------- 卡片 / 列表 ---------- */
+.nx-card {
+  background: var(--nx-surface-container); border-radius: var(--nx-radius-card);
+  overflow: hidden;
+}
+.nx-card + .nx-card { margin-top: var(--nx-group-gap); }
+.nx-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 14px var(--nx-row-pad); min-height: 56px;
+  background: transparent; border: 0; width: 100%; text-align: left;
+  color: var(--nx-on-bg); font-family: var(--nx-font); cursor: pointer;
+}
+.nx-row:active { background: var(--nx-selector); }
+.nx-row__title { font-size: var(--nx-main); font-weight: 500; flex: 1; }
+.nx-row__summary { display: block; font-size: var(--nx-body2); color: var(--nx-text-summary); font-weight: 400; margin-top: 2px; }
+.nx-row__action { color: var(--nx-text-action); font-size: var(--nx-body2); }
+.nx-icon-box {
+  width: 28px; height: 28px; border-radius: var(--nx-radius-icon);
+  display: grid; place-items: center; background: var(--nx-primary);
+  color: #fff; flex: 0 0 28px;
+}
+.nx-icon-box svg { width: 18px; height: 18px; }
+
+.nx-small-title {
+  font-size: var(--nx-body2); font-weight: 700; color: var(--nx-small-title);
+  padding: 8px 12px; margin-top: 4px;
+}
+.nx-page { padding: 0 var(--nx-row-pad) 60px; }
+@media (min-width: 600px) { .nx-page { padding: 0 20px 60px; } }
+
+/* ---------- 内容卡（课表/流水/待办） ---------- */
+.nx-item {
+  border-radius: var(--nx-radius-item);
+  padding: 6px 4px; font-size: 12px; font-weight: 500;
+  overflow: hidden; position: relative;
+}
+.nx-item__meta { display: block; font-size: 10px; opacity: .7; margin-top: 2px; }
+.nx-item__dot { position: absolute; right: 5px; bottom: 5px; width: 8px; height: 8px; border-radius: 999px; }
+
+/* ---------- 开关 ---------- */
+.nx-switch { width: 44px; height: 26px; border-radius: 999px; background: var(--nx-segment-idle); position: relative; }
+.nx-switch[data-on="true"] { background: var(--nx-primary); }
+.nx-switch::after {
+  content: ""; position: absolute; top: 2px; left: 2px; width: 22px; height: 22px; border-radius: 999px;
+  background: #fff; transition: transform var(--nx-dur-fast) var(--nx-out-cubic);
+}
+.nx-switch[data-on="true"]::after { transform: translateX(18px); }
+
+/* ---------- 动效 ---------- */
+@keyframes nx-reveal {
+  from { opacity: 0; transform: translateY(8px) scale(.97); filter: blur(10px); }
+  to   { opacity: 1; transform: none; filter: blur(0); }
+}
+.nx-reveal { animation: nx-reveal var(--nx-dur-card) var(--nx-out-quart) both; animation-delay: calc(.12s + var(--i, 0) * 56ms); }
+
+@keyframes nx-text-in { from { opacity: 0; filter: blur(8px); } to { opacity: 1; filter: blur(0); } }
+.nx-text-swap { animation: nx-text-in .18s var(--nx-out-quart) both; }
+
+.nx-morph { transition: transform var(--nx-dur-morph) var(--nx-out-quart), border-radius var(--nx-dur-morph) var(--nx-out-quart); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* ---------- 按压高光 ---------- */
+.nx-press { position: relative; overflow: hidden; }
+.nx-press::after {
+  content: ""; position: absolute; left: var(--hx, 50%); top: var(--hy, 50%);
+  width: 180%; aspect-ratio: 1; translate: -50% -50%; pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 255, 255, .5), transparent 62%);
+  opacity: 0; transition: opacity .2s;
+}
+.nx-press:active::after { opacity: 1; }

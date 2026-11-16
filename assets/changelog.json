@@ -1,0 +1,166 @@
+{
+  "entries": [
+    {
+      "version": "1.0.1",
+      "date": "2026-11-16",
+      "items": [
+        {
+          "type": "added",
+          "title": "工具页扩充：成长记录",
+          "detail": "记录身高、体重、头围，查看生长曲线与累计变化",
+          "scope": "工具页",
+          "ref": "REQ-9"
+        },
+        {
+          "type": "added",
+          "title": "工具页扩充：喂养计时器",
+          "detail": "母乳左/右侧或瓶喂计时，自动保存每次喂养记录",
+          "scope": "工具页",
+          "ref": "REQ-9"
+        },
+        {
+          "type": "added",
+          "title": "工具页扩充：数据备份与导出",
+          "detail": "一键导出全部本地记录为 JSON 文件，不上传服务器",
+          "scope": "工具页",
+          "ref": "REQ-9"
+        },
+        {
+          "type": "changed",
+          "title": "工具页按分组重排",
+          "detail": "宝宝成长 / 记录与照顾 / 选购与影像 / 数据与安全，提升信息密度",
+          "scope": "工具页",
+          "ref": "REQ-9"
+        },
+        {
+          "type": "added",
+          "title": "首页「今日概览」",
+          "detail": "聚合今晚睡眠预测、今日饮食餐数与置信度，点击可直达对应页面",
+          "scope": "首页",
+          "ref": "REQ-7"
+        },
+        {
+          "type": "added",
+          "title": "首页「快速记录」",
+          "detail": "一键选择记录睡眠或饮食",
+          "scope": "首页",
+          "ref": "REQ-7"
+        },
+        {
+          "type": "added",
+          "title": "首页「今日育儿贴士」",
+          "detail": "按月龄阶段每日轮换，本地内容无需联网",
+          "scope": "首页",
+          "ref": "REQ-7"
+        },
+        {
+          "type": "added",
+          "title": "饮食 × 睡眠联合建模",
+          "detail": "本地可解释预测：月龄基线 + 近 3 日回归 + 交互项，输出夜醒次数、概率、哭闹风险与 Top5 归因",
+          "scope": "睡眠 / 饮食",
+          "ref": "REQ-6"
+        },
+        {
+          "type": "added",
+          "title": "饮食与睡眠可选建模字段",
+          "detail": "饮食份量/餐后反应；睡眠入睡耗时/白天活动/健康事件",
+          "scope": "饮食 / 睡眠记录",
+          "ref": "REQ-6"
+        },
+        {
+          "type": "changed",
+          "title": "食物类型改为自由填写",
+          "detail": "取消固定下拉，提供最近使用与常用快捷标签",
+          "scope": "饮食",
+          "ref": "REQ-5"
+        },
+        {
+          "type": "changed",
+          "title": "界面元素精简",
+          "detail": "移除重复标题、快捷入口、重复设置入口与占位提示",
+          "scope": "全站",
+          "ref": "REQ-8"
+        },
+        {
+          "type": "changed",
+          "title": "选择器全面 Miuix 化",
+          "detail": "下拉改为锚定浮层，日期/时间改为滚轮选择",
+          "scope": "设置 / 饮食 / 睡眠",
+          "ref": "REQ-4"
+        },
+        {
+          "type": "changed",
+          "title": "玻璃拟态降级为纯模糊",
+          "detail": "移除高光渐变、描边与外投影，仅保留背景模糊与低透明填充",
+          "scope": "全站悬浮构件",
+          "ref": "REQ-10"
+        },
+        {
+          "type": "fixed",
+          "title": "数据库升级 v2→v3",
+          "detail": "新增建模字段，旧记录不丢失",
+          "scope": "数据层",
+          "ref": "REQ-6"
+        },
+        {
+          "type": "fixed",
+          "title": "旧「其他」类型记录兼容展示",
+          "detail": "保留「其他 · 名称」的展示格式",
+          "scope": "饮食",
+          "ref": "REQ-5"
+        },
+        {
+          "type": "removed",
+          "title": "移除 Material 原生选择器调用",
+          "scope": "设置 / 饮食 / 睡眠",
+          "ref": "REQ-4"
+        },
+        {
+          "type": "removed",
+          "title": "移除首页重复入口",
+          "detail": "快捷入口宫格、设置圆钮、AI 摘要块、使用提示卡",
+          "scope": "首页",
+          "ref": "REQ-8"
+        }
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-11-14",
+      "items": [
+        {
+          "type": "added",
+          "title": "AI 睡眠预测",
+          "detail": "夜醒时间点、哭闹时段与改善建议",
+          "scope": "睡眠",
+          "ref": "REQ-1"
+        },
+        {
+          "type": "added",
+          "title": "地域饮食建议",
+          "scope": "饮食",
+          "ref": "REQ-2"
+        },
+        {
+          "type": "added",
+          "title": "宝宝选鞋助手",
+          "scope": "工具",
+          "ref": "REQ-3"
+        },
+        {
+          "type": "added",
+          "title": "照片记录与去背景",
+          "scope": "工具",
+          "ref": "REQ-3"
+        },
+        {
+          "type": "added",
+          "title": "宝宝档案与记录功能",
+          "detail": "月龄、喂养方式、地区；睡眠与饮食记录",
+          "scope": "全站",
+          "ref": "REQ-1"
+        }
+      ]
+    }
+  ]
+}
