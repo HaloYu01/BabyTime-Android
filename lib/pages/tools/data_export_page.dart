@@ -14,19 +14,24 @@ class DataExportPage extends StatefulWidget {
 
 class _DataExportPageState extends State<DataExportPage> {
   bool _exporting = false;
-  DataExportResult? _result;
+  DataExportPayload? _payload;
+  ExportSaveOutcome? _outcome;
   String? _error;
 
   Future<void> _export() async {
+    if (_exporting) return;
     setState(() {
       _exporting = true;
       _error = null;
     });
     try {
-      final result = await DataExportService.exportAll();
+      final payload = await DataExportService.create();
+      if (!mounted) return;
+      setState(() => _payload = payload);
+      final outcome = await DataExportService.saveToUserLocation(payload);
       if (!mounted) return;
       setState(() {
-        _result = result;
+        _outcome = outcome;
         _exporting = false;
       });
     } catch (e) {
@@ -38,10 +43,25 @@ class _DataExportPageState extends State<DataExportPage> {
     }
   }
 
+  Future<void> _saveAgain() async {
+    final payload = _payload;
+    if (payload == null || _exporting) return;
+    setState(() {
+      _exporting = true;
+      _error = null;
+    });
+    final outcome = await DataExportService.saveToUserLocation(payload);
+    if (!mounted) return;
+    setState(() {
+      _outcome = outcome;
+      _exporting = false;
+    });
+  }
+
   Future<void> _copy() async {
-    final result = _result;
-    if (result == null) return;
-    await Clipboard.setData(ClipboardData(text: result.json));
+    final payload = _payload;
+    if (payload == null) return;
+    await Clipboard.setData(ClipboardData(text: payload.json));
     if (!mounted) return;
     ScaffoldMessenger.of(context)
         .showSnackBar(const SnackBar(content: Text('JSON 已复制到剪贴板')));
@@ -49,7 +69,11 @@ class _DataExportPageState extends State<DataExportPage> {
 
   @override
   Widget build(BuildContext context) {
-    final result = _result;
+    final payload = _payload;
+    final outcome = _outcome;
+    final saved = outcome?.saved == true;
+    final cancelled = outcome?.cancelled == true;
+
     return NexioPageScaffold(
       title: '数据备份与导出',
       bottomInset: 40,
@@ -69,8 +93,11 @@ class _DataExportPageState extends State<DataExportPage> {
               Text('导出内容：睡眠、饮食、照片记录、成长数据、喂养记录。',
                   style: NexioType.body2),
               const SizedBox(height: 4),
-              Text('文件仅在你本机生成，不会上传服务器；请妥善保管。',
-                  style: NexioType.footnote1),
+              Text(
+                '保存时请在系统对话框中选择「下载」或「文档」文件夹，保存后即可在手机文件管理器中找到。'
+                '文件仅在本机生成，不会上传服务器。',
+                style: NexioType.footnote1.copyWith(height: 1.5),
+              ),
             ],
           ),
         ),
@@ -83,8 +110,8 @@ class _DataExportPageState extends State<DataExportPage> {
                     width: 16,
                     height: 16,
                     child: CircularProgressIndicator(strokeWidth: 2))
-                : const Icon(Icons.file_upload_outlined, size: 18),
-            label: Text(_exporting ? '生成中…' : '生成导出文件'),
+                : const Icon(Icons.save_alt, size: 18),
+            label: Text(_exporting ? '生成中…' : '导出并保存到手机'),
           ),
         ),
         if (_error != null)
@@ -93,39 +120,71 @@ class _DataExportPageState extends State<DataExportPage> {
             child: Text(_error!,
                 style: NexioType.body2.copyWith(color: NexioColors.error)),
           ),
-        if (result != null)
+        if (payload != null)
           NexioCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const NexioCardHeader(
-                    icon: Icons.check_circle_outline, title: '导出完成'),
+                NexioCardHeader(
+                  icon: saved
+                      ? Icons.check_circle_outline
+                      : cancelled
+                          ? Icons.info_outline
+                          : Icons.error_outline,
+                  title: saved
+                      ? '已保存到手机'
+                      : cancelled
+                          ? '已生成，未保存'
+                          : '保存失败',
+                ),
                 const SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    NexioStat(label: '睡眠', value: '${result.sleepCount}'),
-                    NexioStat(label: '饮食', value: '${result.mealCount}'),
-                    NexioStat(label: '照片', value: '${result.photoCount}'),
+                    NexioStat(label: '睡眠', value: '${payload.sleepCount}'),
+                    NexioStat(label: '饮食', value: '${payload.mealCount}'),
+                    NexioStat(label: '照片', value: '${payload.photoCount}'),
                   ],
                 ),
                 const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    NexioStat(label: '成长', value: '${result.growthCount}'),
-                    NexioStat(label: '喂养', value: '${result.feedingCount}'),
-                    NexioStat(label: '总计', value: '${result.total}'),
+                    NexioStat(label: '成长', value: '${payload.growthCount}'),
+                    NexioStat(label: '喂养', value: '${payload.feedingCount}'),
+                    NexioStat(label: '总计', value: '${payload.total}'),
                   ],
                 ),
+                if (saved) ...[
+                  const SizedBox(height: 12),
+                  Text('保存位置', style: NexioType.footnote1),
+                  const SizedBox(height: 2),
+                  Text(outcome?.location ?? '你选择的文件夹',
+                      style: NexioType.footnote2,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis),
+                  const SizedBox(height: 4),
+                  Text('可在文件管理器对应的「下载 / 文档」文件夹中查看。',
+                      style: NexioType.footnote2),
+                ] else if (cancelled) ...[
+                  const SizedBox(height: 12),
+                  Text('你取消了保存。可点击「再次保存」重新选择位置，或复制 JSON 内容。',
+                      style: NexioType.body2),
+                ] else if (outcome?.error != null) ...[
+                  const SizedBox(height: 12),
+                  Text(outcome!.error!,
+                      style: NexioType.body2.copyWith(color: NexioColors.error)),
+                ],
                 const SizedBox(height: 12),
-                Text('文件路径', style: NexioType.footnote1),
-                const SizedBox(height: 2),
-                Text(result.filePath,
-                    style: NexioType.footnote2,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis),
-                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: _exporting ? null : _saveAgain,
+                    icon: const Icon(Icons.save_alt, size: 18),
+                    label: const Text('再次保存'),
+                  ),
+                ),
+                const SizedBox(height: 8),
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton.icon(
@@ -137,8 +196,10 @@ class _DataExportPageState extends State<DataExportPage> {
               ],
             ),
           ),
+
         const NexioNoteCard(
-          text: '导出文件保存在应用文档目录，可通过系统文件管理或分享应用访问。',
+          icon: Icons.folder_open,
+          text: '若保存对话框未弹出，请改用「复制 JSON 内容」粘贴到笔记或发送到电脑。',
         ),
       ],
     );

@@ -58,5 +58,7 @@ replay_pid*.log
 # 构建产物
 **/build/
 android/.gradle/
+android/.kotlin/
+build/symbols/
 **/generated_plugin_registrant.*
 **/generated_plugins.cmake

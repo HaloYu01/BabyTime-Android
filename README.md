@@ -2,7 +2,7 @@
 
 一款面向新手父母的育儿辅助 App（Flutter / Android 单平台）。
 
-- 版本：**1.0.1+2**（语义化版本 `版本名+构建号`，详见 [CHANGELOG.md](CHANGELOG.md)）
+- 版本：**1.0.2+3**（语义化版本 `版本名+构建号`，详见 [CHANGELOG.md](CHANGELOG.md)）
 - 界面：Nexio 设计规范（Miuix 风格设计令牌 + 纯模糊玻璃构件），数据全部本地存储
 
 ## 功能

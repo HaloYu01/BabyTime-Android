@@ -1,16 +1,9 @@
 {
   "entries": [
     {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "date": "2026-11-16",
       "items": [
-        {
-          "type": "added",
-          "title": "关于页「检查更新」",
-          "detail": "基于 GitHub Releases/Tags 检查新版本，可跳转下载页；无发布时提示当前为开发版",
-          "scope": "设置 / 关于",
-          "ref": "REQ-11"
-        },
         {
           "type": "added",
           "title": "工具页扩充：成长记录",
@@ -38,6 +31,40 @@
           "detail": "宝宝成长 / 记录与照顾 / 选购与影像 / 数据与安全，提升信息密度",
           "scope": "工具页",
           "ref": "REQ-9"
+        },
+        {
+          "type": "fixed",
+          "title": "导出文件可在手机文件夹中找到",
+          "detail": "改用系统保存对话框（SAF），可选择下载/文档目录；取消时不报错，可再次保存",
+          "scope": "工具 / 数据导出",
+          "ref": "REQ-14"
+        },
+        {
+          "type": "changed",
+          "title": "APK 体积压缩",
+          "detail": "release 开启 R8 代码缩减与资源收缩、应用图标转 WebP、发布采用 ABI 拆分：通用包 53.2 MB → 单设备约 18 MB（约 -65%）",
+          "scope": "工程",
+          "ref": "REQ-15"
+        },
+        {
+          "type": "fixed",
+          "title": "修复 Android 构建失败（AAR metadata）",
+          "detail": "升级 file_picker 至 13.4.0（Android 模块继承 compileSdk 36），并适配 saveFile 新 API",
+          "scope": "工程 / 构建",
+          "ref": "REQ-16"
+        }
+      ]
+    },
+    {
+      "version": "1.0.1",
+      "date": "2026-11-16",
+      "items": [
+        {
+          "type": "added",
+          "title": "关于页「检查更新」",
+          "detail": "基于 GitHub Releases/Tags 检查新版本，可跳转下载页；无发布时提示当前为开发版",
+          "scope": "设置 / 关于",
+          "ref": "REQ-11"
         },
         {
           "type": "added",

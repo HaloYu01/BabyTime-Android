@@ -154,14 +154,15 @@ class ChangelogParser {
   /// 数据文件缺失/解析失败时的兜底列表（保证页面不空白）。
   static List<ChangelogEntry> fallbackEntries() => [
         ChangelogEntry(
-          version: '1.0.1',
+          version: '1.0.2',
           date: DateTime(2026, 11, 16),
           items: const [
             ChangelogItem(
                 type: ChangelogType.added,
-                title: '首页今日概览、快速记录与育儿贴士'),
-            ChangelogItem(type: ChangelogType.changed, title: '食物类型改为自由填写'),
-            ChangelogItem(type: ChangelogType.fixed, title: '数据库升级 v2→v3'),
+                title: '工具页扩充：成长记录、喂养计时器、数据备份与导出'),
+            ChangelogItem(type: ChangelogType.changed, title: '工具页按分组重排'),
+            ChangelogItem(
+                type: ChangelogType.fixed, title: '导出文件可在手机文件夹中找到'),
           ],
         ),
         ChangelogEntry(
