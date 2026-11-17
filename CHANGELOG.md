@@ -16,7 +16,7 @@
 
 ### Fixed
 - 修复导出文件在手机文件管理器中不可见：改用系统保存对话框（SAF），可选择「下载 / 文档」目录；取消保存不报错，可再次保存或复制 JSON。
-- 修复 Android 构建失败（AAR metadata）：升级 file_picker 至 13.4.0（Android 模块继承 compileSdk 36），并适配 saveFile 新 API。
+- 修复 Android 构建失败（AAR metadata）：升级 file_picker 至 13.4.0（Android 模块继承 compileSdk 36），并适配 saveFile 新 API；补充 Play Core `-dontwarn` 规则（项目未使用动态功能）。
 
 ## [1.0.1] - 2026-11-16
 
